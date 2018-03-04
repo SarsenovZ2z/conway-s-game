@@ -1,0 +1,144 @@
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Conway's game</title>
+    <link rel="stylesheet" type="text/css" href="css/main.css">
+    <!--bootstrap-->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <!--bootstrap-->
+</head>
+<body>
+    <div calss="wrapper">
+    <header>
+        <nav>
+        </nav>
+    </header>
+    <div class="subheader">
+        <ul class="animated-text">
+            <li>C</li>
+            <li>o</li>
+            <li>n</li>
+            <li>w</li>
+            <li>a</li>
+            <li>y</li>
+            <li>'</li>
+            <li>s</li>
+            <li>&nbsp</li>
+            <li>g</li>
+            <li>a</li>
+            <li>m</li>
+            <li>e</li>
+        </ul>
+    </div>
+    <main>
+        <h1>Lorem ipsum</h1>
+        <p>
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
+        </p>
+        <hr/>
+        <div id="game">
+            <div id="control-panel" class="btn-group btn-group-lg">
+                <button type="button" id="btn-start" class="btn btn-success">Start</button>
+                <button type="button" id="btn-stop" class="btn btn-danger" disabled="true">Stop</button>
+                <div id="speed-controller">
+                    <input type="number" name="speed" value="100" title="Speed"/>
+                    <input type="number" name="cols" value = "50" title="Number of columns"/>
+                    <input type="number" name="rows" value = "50" title="Number of rows"/>
+                </div>
+            </div>
+            <canvas id="arena"></canvas>
+        </div>
+
+    </main>
+    <div class="prefooter"></div>
+    <footer>
+        <hr/>
+        <div class="row">
+            <div class="col-sm-3"></div>
+            <div class="col-sm-3">
+                <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.</p>
+
+            </div>
+            <div class="col-sm-3 footer-col-bordered">
+                <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.</p>
+                <p>
+                    Author: <b><i>Nurdaulet Sarsenov</i></b>
+                </p>
+            </div>
+            <div class="col-sm-3"></div>
+        </div>
+        <hr/>
+        <!--jQuery-->
+            <script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.3.1.min.js"></script>
+        <!--jQuery-->
+        <!-- Latest compiled and minified JavaScript -->
+            <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+        <!-- Latest compiled and minified JavaScript -->
+        <script src="scripts/game-wrapper.js"></script>
+        <script>
+
+            window.onload = function() {
+                var speed = 100;
+                var rows = 50;
+                var cols = 50;
+                var timeline;
+                var btnStart = document.getElementById("btn-start");
+                var btnStop = document.getElementById("btn-stop");
+                var speedController = document.getElementById("speed-controller").children[0];
+                var colController = document.getElementById("speed-controller").children[1];
+                var rowController = document.getElementById("speed-controller").children[2];
+                var game = document.getElementById("game");
+                var arena = document.getElementById("arena");
+                    arena.width = game.offsetWidth;
+                    arena.height = game.offsetHeight;
+                var c = arena.getContext("2d");
+                var controller = gameController(arena.width, arena.height, cols, rows, c);
+                controller.init();
+                timeline = start();
+
+                function start() {
+                    return window.setInterval(function() {
+                        if (controller.pause==false) {
+                            controller.update();
+                        }
+                        controller.drawBoard();
+                    }, speed);
+                }
+
+                btnStart.onclick = function() {
+                    controller.pause = false;
+                    btnStart.setAttribute("disabled", true);
+                    btnStop.removeAttribute("disabled");
+                };
+
+                btnStop.onclick = function() {
+                    controller.pause = true;
+                    btnStart.removeAttribute("disabled");
+                    btnStop.setAttribute("disabled", true);
+                };
+
+                arena.onclick = function(e) {
+                    controller.setNode(e.offsetX, e.offsetY);
+                }
+
+                speedController.onchange = function() {
+                    speed = this.value;
+                    window.clearInterval(timeline);
+                    timeline = start();
+                }
+
+                colController.onchange = function() {
+                    controller.setCols(this.value);
+                }
+
+                rowController.onchange = function() {
+                    controller.setRows(this.value);
+                }
+
+
+            }
+
+        </script>
+    </footer>
+</body>
+</html>
